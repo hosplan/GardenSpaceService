@@ -14,7 +14,8 @@ namespace GardenSpaceService.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -30,7 +31,8 @@ namespace GardenSpaceService.Migrations
                     CreatorId = table.Column<int>(type: "int", nullable: false),
                     SpaceName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BranchId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BranchId = table.Column<int>(type: "int", nullable: false),
+                    SpaceTypeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsPrivate = table.Column<bool>(type: "bit", nullable: false),
                     OnlyInvite = table.Column<bool>(type: "bit", nullable: false),
@@ -52,7 +54,8 @@ namespace GardenSpaceService.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RootTypeId = table.Column<int>(type: "int", nullable: false)
+                    RootTypeId = table.Column<int>(type: "int", nullable: false),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -73,40 +76,20 @@ namespace GardenSpaceService.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GardenSpaceId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
+                    BranchId = table.Column<int>(type: "int", nullable: false),
                     ParticiDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GardenSpaceUserMap", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GardenSpaceUserMap_GardenSpace_GardenSpaceId",
-                        column: x => x.GardenSpaceId,
-                        principalTable: "GardenSpace",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GardenParticipateRole",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<int>(type: "int", nullable: false),
-                    GardenSpaceId = table.Column<int>(type: "int", nullable: false),
-                    GardenBranchId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GardenParticipateRole", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_GardenParticipateRole_GardenBranchType_GardenBranchId",
-                        column: x => x.GardenBranchId,
+                        name: "FK_GardenSpaceUserMap_GardenBranchType_BranchId",
+                        column: x => x.BranchId,
                         principalTable: "GardenBranchType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GardenParticipateRole_GardenSpace_GardenSpaceId",
+                        name: "FK_GardenSpaceUserMap_GardenSpace_GardenSpaceId",
                         column: x => x.GardenSpaceId,
                         principalTable: "GardenSpace",
                         principalColumn: "Id",
@@ -119,14 +102,9 @@ namespace GardenSpaceService.Migrations
                 column: "RootTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GardenParticipateRole_GardenBranchId",
-                table: "GardenParticipateRole",
-                column: "GardenBranchId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GardenParticipateRole_GardenSpaceId",
-                table: "GardenParticipateRole",
-                column: "GardenSpaceId");
+                name: "IX_GardenSpaceUserMap_BranchId",
+                table: "GardenSpaceUserMap",
+                column: "BranchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GardenSpaceUserMap_GardenSpaceId",
@@ -136,9 +114,6 @@ namespace GardenSpaceService.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "GardenParticipateRole");
-
             migrationBuilder.DropTable(
                 name: "GardenSpaceUserMap");
 

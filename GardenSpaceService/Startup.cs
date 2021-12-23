@@ -99,7 +99,7 @@ namespace GardenSpaceService
             }
 
            app.UseCors(builder =>
-           builder.WithOrigins("https://localhost:49157")
+           builder.WithOrigins("https://localhost:49153")
                              .AllowAnyHeader()
                              .AllowAnyMethod()
                              .AllowCredentials());

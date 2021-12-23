@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GardenSpaceService.Migrations
 {
     [DbContext(typeof(GardenSpaceContext))]
-    [Migration("20211222150527_initial")]
+    [Migration("20211223142115_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,6 +27,9 @@ namespace GardenSpaceService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -45,37 +48,15 @@ namespace GardenSpaceService.Migrations
                     b.ToTable("GardenBranchType");
                 });
 
-            modelBuilder.Entity("GardenSpaceService.Model.GardenParticipateRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("GardenBranchId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GardenSpaceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Name")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GardenBranchId");
-
-                    b.HasIndex("GardenSpaceId");
-
-                    b.ToTable("GardenParticipateRole");
-                });
-
             modelBuilder.Entity("GardenSpaceService.Model.GardenRootType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -96,8 +77,8 @@ namespace GardenSpaceService.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("BranchId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
@@ -126,6 +107,9 @@ namespace GardenSpaceService.Migrations
                     b.Property<string>("SpaceName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SpaceTypeName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -141,6 +125,9 @@ namespace GardenSpaceService.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
                     b.Property<int>("GardenSpaceId")
                         .HasColumnType("int");
 
@@ -152,6 +139,8 @@ namespace GardenSpaceService.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BranchId");
+
                     b.HasIndex("GardenSpaceId");
 
                     b.ToTable("GardenSpaceUserMap");
@@ -160,7 +149,7 @@ namespace GardenSpaceService.Migrations
             modelBuilder.Entity("GardenSpaceService.Model.GardenBranchType", b =>
                 {
                     b.HasOne("GardenSpaceService.Model.GardenRootType", "RootType")
-                        .WithMany()
+                        .WithMany("GardenBranchTypes")
                         .HasForeignKey("RootTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -168,16 +157,16 @@ namespace GardenSpaceService.Migrations
                     b.Navigation("RootType");
                 });
 
-            modelBuilder.Entity("GardenSpaceService.Model.GardenParticipateRole", b =>
+            modelBuilder.Entity("GardenSpaceService.Model.GardenSpaceUserMap", b =>
                 {
                     b.HasOne("GardenSpaceService.Model.GardenBranchType", "GardenBranchType")
                         .WithMany()
-                        .HasForeignKey("GardenBranchId")
+                        .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GardenSpaceService.Model.GardenSpace", "GardenSpace")
-                        .WithMany()
+                        .WithMany("GardenSpaceUserMaps")
                         .HasForeignKey("GardenSpaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -187,15 +176,14 @@ namespace GardenSpaceService.Migrations
                     b.Navigation("GardenSpace");
                 });
 
-            modelBuilder.Entity("GardenSpaceService.Model.GardenSpaceUserMap", b =>
+            modelBuilder.Entity("GardenSpaceService.Model.GardenRootType", b =>
                 {
-                    b.HasOne("GardenSpaceService.Model.GardenSpace", "GardenSpace")
-                        .WithMany()
-                        .HasForeignKey("GardenSpaceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("GardenBranchTypes");
+                });
 
-                    b.Navigation("GardenSpace");
+            modelBuilder.Entity("GardenSpaceService.Model.GardenSpace", b =>
+                {
+                    b.Navigation("GardenSpaceUserMaps");
                 });
 #pragma warning restore 612, 618
         }

@@ -34,9 +34,9 @@ namespace GardenSpaceService.Services
         /// <returns></returns>
         public List<Claim> GetClaimList(string jwt);
 
-
         public string GetEmail(List<Claim> claimList);
 
+        public int GetId(List<Claim> claimList);  
         public string GetRoleId(List<Claim> claimList);
     }
 
@@ -56,6 +56,19 @@ namespace GardenSpaceService.Services
         public string GetRoleId(List<Claim> claimList)
         {
             return claimList[1].Value;
+        }
+
+        public int GetId(List<Claim> claimList)
+        {
+            try
+            {
+                return Convert.ToInt32(claimList[3].Value);
+            }
+            catch(Exception ex)
+            {
+                string error = ex.Message;
+                return 0;
+            }
         }
 
         public JwtSecurityToken DecodeJwt(string jwt)
