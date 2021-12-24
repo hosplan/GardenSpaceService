@@ -1,4 +1,5 @@
 ﻿using GardenSpaceService.Model;
+using GardenWeb.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GardenSpaceService.Data
@@ -14,5 +15,7 @@ namespace GardenSpaceService.Data
         public DbSet<GardenSpaceUserMap> GardenSpaceUserMap { get; set; }
         public DbSet<GardenBranchType> GardenBranchType { get; set; }
         public DbSet<GardenRootType> GardenRootType { get; set; }
+        public DbSet<BaseBranchType> BaseBranchType { get; set; }
+        public DbSet<BaseRootType> BaseRootType { get; set; }
     }
 }

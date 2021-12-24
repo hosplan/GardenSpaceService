@@ -12,7 +12,8 @@ namespace GardenSpaceService.Model
         public int CreatorId { get; set; }
         public string SpaceName { get; set; }
         public string Description { get; set; }
-        public int BranchId { get; set; }
+        public string Color { get; set; }
+        public int StatusId { get; set; }
         public string SpaceTypeName { get; set; }
         public DateTime CreateDate { get; set; }
         public bool IsPrivate { get; set; }

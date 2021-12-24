@@ -1,6 +1,7 @@
 ﻿using GardenSpaceService.Data;
 using GardenSpaceService.Model;
 using GardenSpaceService.Services;
+using GardenWeb.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +37,43 @@ namespace GardenSpaceService.Controllers
 
                 _context.Add(gardenSpace);
                 await _context.SaveChangesAsync();
-                return Ok(new { token = true });
+
+                //프로젝트 생성시 기본 템플릿 타입 생성 - 추후 코드 분기
+                List<BaseRootType> baseRootTypes = _context.BaseRootType.ToList();
+
+                List<GardenBranchType> branchTypes = new List<GardenBranchType>();
+    
+                foreach(BaseRootType baseRootType in baseRootTypes)
+                {
+                    GardenRootType rootType = new GardenRootType();
+
+                    rootType.Name = baseRootType.Name;
+                    rootType.Description = baseRootType.Description;
+                    rootType.GardenSpaceId = gardenSpace.Id;
+
+                    _context.Add(rootType);
+                    _context.SaveChanges();
+
+                    var baseBranchTypes = _context.BaseBranchType.Where(b => b.BaseRootTypeId == baseRootType.RootId);
+
+                    foreach(var basebranchType in baseBranchTypes)
+                    {
+                        GardenBranchType branchType = new GardenBranchType();
+
+                        branchType.Name = basebranchType.Name;
+                        branchType.Description = basebranchType.Description;
+                        branchType.Color = basebranchType.Color;
+                        branchType.RootTypeId = rootType.Id;
+                        branchTypes.Add(branchType);
+                    }
+                }
+                _context.AddRange(branchTypes);
+                await _context.SaveChangesAsync();
+
+                
+
+
+                return Ok(new { token = true, data = gardenSpace.Id });
             }
             catch(Exception ex)
             {
@@ -44,6 +81,10 @@ namespace GardenSpaceService.Controllers
                 return Ok(new { token = true, data = "오류가 발생 했습니다.."});
             }
         }
+
+
+        
+
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
@@ -57,17 +98,18 @@ namespace GardenSpaceService.Controllers
                 }
                 object obj = new
                 {
+                    id = gardenSpace.Id,
                     name = gardenSpace.SpaceName,
                     creator = gardenSpace.CreatorId,
                     description = gardenSpace.Description,
-                    createDate = gardenSpace.CreateDate.ToShortDateString(),
+                    createDate = gardenSpace.CreateDate.ToString("yyyy-MM-dd"),
                     spaceTypeName = gardenSpace.SpaceTypeName,
                     isPrivate = gardenSpace.IsPrivate,
                     onlyInvite = gardenSpace.OnlyInvite,
-                    planStartDate = gardenSpace.PlanStartDate.HasValue ? gardenSpace.PlanStartDate.Value.ToShortDateString() : "",
-                    planEndDate = gardenSpace.PlanEndDate.HasValue ? gardenSpace.PlanEndDate.Value.ToShortDateString() : "",
-                    startDate = gardenSpace.StartDate.HasValue ? gardenSpace.StartDate.Value.ToShortDateString() : "",
-                    endDate = gardenSpace.EndDate.HasValue ? gardenSpace.EndDate.Value.ToShortDateString() : ""
+                    planStartDate = gardenSpace.PlanStartDate.HasValue ? gardenSpace.PlanStartDate.Value.ToString("yyyy-MM-dd") : "",
+                    planEndDate = gardenSpace.PlanEndDate.HasValue ? gardenSpace.PlanEndDate.Value.ToString("yyyy-MM-dd") : "",
+                    startDate = gardenSpace.StartDate.HasValue ? gardenSpace.StartDate.Value.ToString("yyyy-MM-dd") : "",
+                    endDate = gardenSpace.EndDate.HasValue ? gardenSpace.EndDate.Value.ToString("yyyy-MM-dd") : ""
                 };
                 
                 return Ok(new { token = true, data = obj });

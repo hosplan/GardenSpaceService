@@ -15,10 +15,7 @@ namespace GardenSpaceService.Model
         public int BranchId { get; set; }
         public DateTime ParticiDate { get; set; }
 
-        [ForeignKey("BranchId")]
-        public virtual GardenBranchType GardenBranchType { get; set; }
-
         [ForeignKey("GardenSpaceId")]
-        public virtual GardenSpace GardenSpace { get; set; }
+        public GardenSpace GardenSpace { get; set; }
     }
 }
