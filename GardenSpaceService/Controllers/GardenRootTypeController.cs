@@ -79,8 +79,7 @@ namespace GardenSpaceService.Controllers
                 if (updateValue == null) { return Ok(new { token = false }); }
 
                 updateValue.Name = gardenRootType.Name;
-                updateValue.Description = gardenRootType.Description;
-                updateValue.Color = gardenRootType.Color;
+                updateValue.Description = gardenRootType.Description;   
 
                 _context.Update(updateValue);
                 await _context.SaveChangesAsync();

@@ -14,7 +14,6 @@ namespace GardenSpaceService.Model
         public int GardenSpaceId { get; set; }
         [ForeignKey("GardenSpaceId")]
         public GardenSpace GardenSpace { get; set; }
-        public string Color { get; set; }
         public ICollection<GardenBranchType> GardenBranchTypes { get; set; }
     }
 }

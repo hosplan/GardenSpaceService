@@ -34,7 +34,7 @@ namespace GardenSpaceService.Controllers
                 gardenSpace.IsPrivate = true;
                 gardenSpace.OnlyInvite = true;
                 gardenSpace.CreateDate = DateTime.Now;
-
+                gardenSpace.Color = "#FFF";
                 _context.Add(gardenSpace);
                 await _context.SaveChangesAsync();
 
@@ -106,6 +106,7 @@ namespace GardenSpaceService.Controllers
                     spaceTypeName = gardenSpace.SpaceTypeName,
                     isPrivate = gardenSpace.IsPrivate,
                     onlyInvite = gardenSpace.OnlyInvite,
+                    color = gardenSpace.Color,
                     planStartDate = gardenSpace.PlanStartDate.HasValue ? gardenSpace.PlanStartDate.Value.ToString("yyyy-MM-dd") : "",
                     planEndDate = gardenSpace.PlanEndDate.HasValue ? gardenSpace.PlanEndDate.Value.ToString("yyyy-MM-dd") : "",
                     startDate = gardenSpace.StartDate.HasValue ? gardenSpace.StartDate.Value.ToString("yyyy-MM-dd") : "",
